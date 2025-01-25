@@ -9,7 +9,8 @@ const WebhookSchema = z.object({
   body: z.record(z.any())
 });
 
-export async function POST(request: Request, { params }: { params: { provider: string[] } }) {
+export async function POST(request: Request, context: { params: { provider: string[] }}) {
+  const params = await Promise.resolve(context.params);
 
   try {
     const provider = params.provider.join('/');
