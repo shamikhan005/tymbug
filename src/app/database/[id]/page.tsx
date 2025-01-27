@@ -3,11 +3,9 @@ import { notFound } from "next/navigation";
 
 const prisma = new PrismaClient();
 
-export default async function WebhookDetail({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function WebhookDetail(context: { params: { id: string }}) {
+  const params = await Promise.resolve(context.params);
+  
   const webhook = await prisma.webhook.findUnique({
     where: { id: params.id },
     include: {
