@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
+    "@supabase/supabase-js": "^2.48.1",
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.9",
     "date-fns": "^4.1.0",
