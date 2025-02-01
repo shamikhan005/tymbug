@@ -9,9 +9,18 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  webhooks  Webhook[]
+  replays   Replay[]
 }
 
 model Webhook {
@@ -23,6 +32,8 @@ model Webhook {
   body           Json
   responseStatus Int
   receivedAt     DateTime @default(now())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
   Replay         Replay[]
 
   @@index([provider])
@@ -35,6 +46,8 @@ model Replay {
   originalId      String
   replayedAt      DateTime @default(now())
   responseStatus  Int
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
 
   @@index([replayedAt])
 }
