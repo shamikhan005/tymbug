@@ -2,12 +2,29 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import axios, { Method } from "axios";
 
+import { supabase } from "@/app/utils/supabase";
+
 const prisma = new PrismaClient();
 
 export async function POST(request: Request, context: { params: { id: string }}) {
   const params = await Promise.resolve(context.params);
   
   try {
+    // extract authentication token from headers
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.split('Bearer ')[1];
+
+    if (!token) {
+      return NextResponse.json({ error: 'no authentication token provided' }, { status: 401 })
+    }
+
+    // verify supabase user from token
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'invalid or expired authentication token' }, { status: 401 });
+    }
+
     const original = await prisma.webhook.findUnique({
       where: { id: params.id }
     });
@@ -36,7 +53,8 @@ export async function POST(request: Request, context: { params: { id: string }})
     const replay = await prisma.replay.create({
       data: {
         originalId: original.id,
-        responseStatus: response.status
+        responseStatus: response.status,
+        userId: user.id
       }
     });
 
