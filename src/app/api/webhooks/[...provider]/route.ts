@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { NextResponse } from "next/server";
 
+import { supabase } from "@/app/utils/supabase";
+
 const prisma = new PrismaClient();
 
 const WebhookSchema = z.object({
@@ -13,6 +15,22 @@ export async function POST(request: Request, context: { params: { provider: stri
   const params = await Promise.resolve(context.params);
 
   try {
+    
+    // extract authentication token from headers
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.split('Bearer ')[1];
+
+    if (!token) {
+      return NextResponse.json({ error: 'No authentication token provided' }, { status: 401 });
+    }
+
+    // verify supabase user from token
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Invalid or expired authentication token' }, { status: 401 });
+    }
+
     const provider = params.provider.join('/');
 
     const headers = Object.fromEntries(request.headers.entries());
@@ -39,6 +57,11 @@ export async function POST(request: Request, context: { params: { provider: stri
         headers: validation.data.headers,
         body: validation.data.body,
         responseStatus: 200,
+        user: {
+          connect: {
+            id: user.id
+          }
+        }
       },
     });
 
