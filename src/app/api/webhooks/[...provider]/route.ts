@@ -1,21 +1,23 @@
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { NextResponse } from "next/server";
-
 import { supabase } from "@/app/utils/supabase";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error']
+});
 
 const WebhookSchema = z.object({
   headers: z.record(z.string()),
   body: z.record(z.any())
 });
 
-export async function POST(request: Request, context: { params: { provider: string[] }}) {
+export async function POST(request: Request, context: { params: { provider: string[] } }) {
   const params = await Promise.resolve(context.params);
 
   try {
-    
+    await prisma.$connect();
+
     // extract authentication token from headers
     const authHeader = request.headers.get('authorization');
     const token = authHeader?.split('Bearer ')[1];
@@ -33,9 +35,13 @@ export async function POST(request: Request, context: { params: { provider: stri
 
     const provider = params.provider.join('/');
 
-    const headers = Object.fromEntries(request.headers.entries());
+    const headers = Object.fromEntries(
+      Array.from(request.headers.entries())
+        .filter(([key]) => !['authorization', 'content-length'].includes(key.toLowerCase()))
+    );
 
-    const body = await request.json();
+    const body = await request.json().catch(() => ({}));
+
 
     const validation = WebhookSchema.safeParse({
       headers,
@@ -69,11 +75,15 @@ export async function POST(request: Request, context: { params: { provider: stri
 
   } catch (error) {
 
-    console.log("webhook error:", error);
+    console.error("Webhook error:", error instanceof Error ? error.message : "Unknown error");
+
     return NextResponse.json(
-      { error: "internal server error" },
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unexpected error format"
+      },
       { status: 500 }
-    )
+    );
 
   }
 }
