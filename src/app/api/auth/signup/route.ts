@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/app/utils/supabase";
+import prisma from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,19 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: error.status || 400 })
+    }
+
+    if (data.user) {
+      await prisma.user.upsert({
+        where: { id: data.user.id },
+        update: {},
+        create: {
+          id: data.user.id,
+          email: data.user.email!,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      });
     }
 
     return NextResponse.json({
