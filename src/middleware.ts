@@ -36,18 +36,6 @@ export async function middleware(request: NextRequest) {
   }
 
   return NextResponse.next();
-
-  // const accessToken = request.cookies.get('sb-access-token')
-  // const path = request.nextUrl.pathname
-
-  // const protectedRoutes = ['/dashboard']
-
-  // if (protectedRoutes.includes(path)) {
-  //   if (!accessToken) {
-  //     return NextResponse.redirect(new URL('/login', request.url))
-  //   }
-  // }
-  // return NextResponse.next()
 }
 
 export const config = {
