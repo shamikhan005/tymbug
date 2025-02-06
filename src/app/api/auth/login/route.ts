@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/app/utils/supabase";
 import { cookies } from 'next/headers';
+import prisma from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
 
@@ -10,20 +11,34 @@ export async function POST(request: NextRequest) {
     const { email, password } = await request.json();
 
     if (!email || !password) {
-      return NextResponse.json (
+      return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400 }
       )
     }
 
     const { data, error } = await supabase.auth.signInWithPassword({
-      email, 
+      email,
       password
     })
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: error.status || 401 })
     }
+
+    if (data.user) {
+      await prisma.user.upsert({
+        where: { id: data.user.id },
+        update: { email: data.user.email! },
+        create: {
+          id: data.user.id,
+          email: data.user.email!,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      });
+    }
+
 
     const cookieStore = await cookies();
 
