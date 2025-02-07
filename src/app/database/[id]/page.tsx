@@ -1,11 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import ReplayButton from "@/app/components/ReplayButton";
 
 const prisma = new PrismaClient();
 
-export default async function WebhookDetail(context: { params: { id: string }}) {
+export default async function WebhookDetail(context: {
+  params: { id: string };
+}) {
   const params = await Promise.resolve(context.params);
-  
+
   const webhook = await prisma.webhook.findUnique({
     where: { id: params.id },
     include: {
@@ -63,14 +67,7 @@ export default async function WebhookDetail(context: { params: { id: string }}) 
           </pre>
         </div>
 
-        <form action={`/api/replay/${webhook.id}`} method="POST">
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 font-semibold"
-          >
-            Replay Webhook
-          </button>
-        </form>
+        <ReplayButton webhookId={webhook.id} />
       </div>
 
       <div className="bg-white shadow rounded-lg p-6">
@@ -78,16 +75,18 @@ export default async function WebhookDetail(context: { params: { id: string }}) 
         {webhook.Replay.length > 0 ? (
           <div className="space-y-4">
             {webhook.Replay.map((replay) => (
-              <div key={replay.id} className="border p-4 rounded">
-                <div className="flex justify-between">
-                  <span className="font-medium">
-                    Status: {replay.responseStatus}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    {new Date(replay.replayedAt).toLocaleString()}
-                  </span>
+              <Link key={replay.id} href={`/replays/${replay.id}`} passHref>
+                <div className="border p-4 rounded cursor-pointer hover:bg-gray-100">
+                  <div className="flex justify-between">
+                    <span className="font-medium">
+                      Status: {replay.responseStatus}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      {new Date(replay.replayedAt).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
