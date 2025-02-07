@@ -1,18 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import axios, { Method } from "axios";
-
 import { supabase } from "@/app/utils/supabase";
+import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
 
-export async function POST(request: Request, context: { params: { id: string }}) {
+export async function POST(request: NextRequest, context: { params: { id: string } }) {
   const params = await Promise.resolve(context.params);
-  
+
   try {
     // extract authentication token from headers
-    const authHeader = request.headers.get('authorization');
-    const token = authHeader?.split('Bearer ')[1];
+    let token = request.headers.get('authorization')?.split('Bearer ')[1];
+
+    if (!token) {
+      const cookieStore = await cookies();
+      token = cookieStore.get('sb-access-token')?.value
+    }
 
     if (!token) {
       return NextResponse.json({ error: 'no authentication token provided' }, { status: 401 })
@@ -30,19 +34,29 @@ export async function POST(request: Request, context: { params: { id: string }})
     });
 
     if (!original) {
-      return NextResponse.json( {error: "webhook not found"}, { status: 404} );
+      return NextResponse.json({ error: "webhook not found" }, { status: 404 });
     }
 
     const retry = async (attempt = 0): Promise<any> => {
       try {
+        let updateHeaders: Record<string, string | string[]> = {};
+        if (original.headers && typeof original.headers === 'object') {
+          updateHeaders = {
+            ...original.headers as Record<string, string | string[]>,
+            Authorization: `Bearer ${token}`
+          }
+        } else {
+          updateHeaders = { Authorization: `Bearer ${token}` }
+        }
+
         return await axios({
           method: original.method as Method,
           url: `http://localhost:3000${original.path}`,
-          headers: original.headers as Record<string, string | string[]>,
+          headers: updateHeaders,
           data: original.body,
         });
       } catch (error) {
-        if (attempt >= 2)  throw error;
+        if (attempt >= 2) throw error;
         await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
         return retry(attempt + 1);
       }
