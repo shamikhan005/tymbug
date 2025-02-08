@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import Link from "next/link";
+import LogoutButton from "../components/LogoutButton";
 
 const prisma = new PrismaClient();
 
@@ -20,8 +21,12 @@ export default async function Dashboard() {
         <h1 className="text-2xl font-semibold text-gray-800">
           Webhook History
         </h1>
-        <div className="text-sm text-gray-500">
-          Showing last {webhooks.length} webhooks
+
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-500">
+            Showing last {webhooks.length} webhooks
+          </div>
+          <LogoutButton />
         </div>
       </div>
 
