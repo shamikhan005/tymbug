@@ -8,14 +8,21 @@ export async function middleware(request: NextRequest) {
   if (path.startsWith('/dashboard')) {
     const accessToken = request.cookies.get('sb-access-token');
     if (!accessToken) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      const redirectUrl = new URL('/login', request.url);
+      const response = NextResponse.redirect(redirectUrl);
+
+      response.headers.set('Cache-Control', 'no-store, max-age=0');
+      response.headers.set('Pragma', 'no-cache');
+      response.headers.set('Expires', '0');
+
+      return response;
     }
   }
 
   if (path.startsWith('/api/webhooks')) {
     const authHeader = request.headers.get('Authorization');
     if (!authHeader) {
-      return NextResponse.json( { error: 'unauthorized - no token provided' }, { status: 401 });
+      return NextResponse.json({ error: 'unauthorized - no token provided' }, { status: 401 });
     }
 
     try {
@@ -26,16 +33,24 @@ export async function middleware(request: NextRequest) {
 
       const token = authHeader.replace('Bearer ', '');
       const { data: { user }, error } = await supabase.auth.getUser(token);
-      
+
       if (error || !user) {
-        return NextResponse.json( { error: 'invalid token' }, { status: 401 });
+        return NextResponse.json({ error: 'invalid token' }, { status: 401 });
       }
     } catch (error) {
-      return NextResponse.json( { error: 'invalid token' }, { status: 401 })
+      return NextResponse.json({ error: 'invalid token' }, { status: 401 })
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  if (path.startsWith('/dashboard')) {
+    response.headers.set('Cache-Control', 'no-store, max-age=0');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+  }
+
+  return response;
 }
 
 export const config = {
