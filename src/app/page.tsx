@@ -1,28 +1,107 @@
+import Link from "next/link";
+
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-900">
-      <main className="flex flex-col items-center text-center px-6">
-        <h2 className="text-4xl font-bold mb-4">Tymbug</h2>
-        <p className="text-lg text-gray-600 max-w-2xl">
-          Capture, replay, and diagnose webhooks in real-time.
+    <div className="min-h-screen bg-gray-900 text-gray-100 font-mono">
+      <header className="container mx-auto px-4 py-16 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down">
+          Tymbug: A Webhook Playground
+        </h1>
+        <p className="text-xl md:text-2xl text-gray-400 mb-8 animate-fade-in-up">
+          A personal project for experimenting with webhook debugging,
+          replaying, and analysis.
         </p>
-        <a href="/signup" className="mt-6 bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600">
+        <Link
+          href="/signup"
+          className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-6 rounded-full transition-colors duration-300 animate-pulse"
+        >
           Get Started
-        </a>
-      </main>
-      
-      <section className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl text-center">
-        <div className="p-6 bg-white shadow rounded-lg">
-          <h3 className="text-xl font-semibold">Capture</h3>
-          <p className="text-gray-600 mt-2">Store webhook requests for inspection and analysis.</p>
+        </Link>
+        <div className="mt-12 p-4 bg-gray-800 rounded-lg overflow-hidden">
+          <pre className="text-left text-sm md:text-base whitespace-pre-wrap break-all">
+            <code className="block">
+              {`POST /webhook HTTP/1.1
+Host: api.tymbug.com
+Content-Type: application/json
+
+{
+  "event": "user.created",
+  "data": {
+    "id": "123",
+    "name": "Shami khan",
+    "email": "shamikhan005@proton.me"
+  }
+}`}
+            </code>
+          </pre>
         </div>
-        <div className="p-6 bg-white shadow rounded-lg">
-          <h3 className="text-xl font-semibold">Replay</h3>
-          <p className="text-gray-600 mt-2">Resend webhooks to debug issues quickly.</p>
+      </header>
+
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-8 text-center">Features</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              title: "Real-time Webhook Logging",
+              description: "Stores incoming webhook events for later analysis.",
+              icon: "📥",
+            },
+            {
+              title: "Replay Webhooks",
+              description: "Resend past requests to test API behavior.",
+              icon: "🔁",
+            },
+            {
+              title: "Compare Responses",
+              description: "View differences between webhook attempts.",
+              icon: "🔍",
+            },
+          ].map((feature, index) => (
+            <div
+              key={index}
+              className="bg-gray-800 p-6 rounded-lg transition-transform duration-300 hover:scale-105"
+            >
+              <div className="text-4xl mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+              <p className="text-gray-400">{feature.description}</p>
+            </div>
+          ))}
         </div>
-        <div className="p-6 bg-white shadow rounded-lg">
-          <h3 className="text-xl font-semibold">Compare</h3>
-          <p className="text-gray-600 mt-2">Analyze webhook responses to ensure consistency.</p>
+      </section>
+
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-8 text-center">How to Use It</h2>
+        <div className="space-y-8">
+          {[
+            {
+              step: "1",
+              title: "Send a webhook to Tymbug's test endpoint",
+              description:
+                "Use your favorite API client or curl to send a webhook to https://api.tymbug.com/webhook",
+            },
+            {
+              step: "2",
+              title: "View and replay requests from the dashboard",
+              description:
+                "Log in to the Tymbug dashboard to see your incoming webhooks and replay them with a single click.",
+            },
+            {
+              step: "3",
+              title: "Analyze headers, payload, and response history",
+              description:
+                "Dive deep into the details of each webhook, compare different attempts.",
+            },
+          ].map((step, index) => (
+            <div key={index} className="flex items-start">
+              <div className="bg-green-500 text-black font-bold rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0">
+                {step.step}
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">{step.title}</h3>
+                <p className="text-gray-400">{step.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </div>
