@@ -55,33 +55,33 @@ export default function LoginPage() {
   const [state, formAction] = useActionState(loginAction, initialState);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-gray-400 font-mono px-4">
       <form
         action={formAction}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+        className="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-sm space-y-6"
       >
-        <h1 className="text-2xl font-bold mb-4 text-center">Log In</h1>
+        <h1 className="text-2xl font-bold text-center animate-fade-in-down">Access Account</h1>
 
         {state.error && (
-          <p className="mb-4 text-red-500 text-center">{state.error}</p>
+          <p className="text-red-500 text-center animate-shake">{state.error}</p>
         )}
 
-        <label className="block mb-2">
-          <span className="text-gray-700">Email</span>
+        <label className="block">
+          <span className="text-gray-400">Email</span>
           <input
             type="email"
             name="email"
-            className="mt-1 block w-full border p-2 rounded"
+            className="mt-1 block w-full bg-gray-700 text-gray-100 border border-gray-600 p-2 rounded focus:outline-none focus:border-green-500 transition-colors duration-300"
             required
           />
         </label>
 
-        <label className="block mb-4">
-          <span className="text-gray-700">Password</span>
+        <label className="block">
+          <span className="text-gray-400">Password</span>
           <input
             type="password"
             name="password"
-            className="mt-1 block w-full border p-2 rounded"
+            className="mt-1 block w-full bg-gray-700 text-gray-100 border border-gray-600 p-2 rounded focus:outline-none focus:border-green-500 transition-colors duration-300"
             required
           />
         </label>
@@ -89,10 +89,20 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={state.loading}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded disabled:opacity-50"
+          className="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded transition-colors duration-300 disabled:opacity-50"
         >
           {state.loading ? "Logging in..." : "Log In"}
         </button>
+
+        <p className="text-center text-gray-400">
+          Don't have an account?{" "}
+          <a
+            href="/signup"
+            className="text-green-500 hover:text-green-600 font-medium transition-colors duration-300"
+          >
+            Sign Up
+          </a>
+        </p>
       </form>
     </div>
   );
