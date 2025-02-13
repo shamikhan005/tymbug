@@ -58,37 +58,37 @@ export default function SignupPage() {
   const [state, formAction] = useActionState(signupAction, initialState);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4 font-mono">
       <form
         action={formAction}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+        className="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-sm space-y-6"
       >
-        <h1 className="text-2xl font-bold mb-4 text-center">Sign Up</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center animate-fade-in-down text-gray-400">Create your account</h1>
 
         {state.error && (
-          <p className="mb-4 text-red-500 text-center">{state.error}</p>
+          <p className="text-red-500 text-center animate-shake">{state.error}</p>
         )}
 
         {state.message && (
-          <p className="mb-4 text-green-500 text-center">{state.message}</p>
+          <p className="text-green-500 text-center">{state.message}</p>
         )}
 
-        <label className="block mb-2">
-          <span className="text-gray-700">Email</span>
+        <label className="block">
+          <span className="text-gray-400">Email</span>
           <input
             type="email"
             name="email"
-            className="mt-1 block w-full border p-2 rounded"
+            className="mt-1 block w-full border bg-gray-700 border-gray-600 p-2 rounded focus:outline-none focus:border-green-500 transition-colors duration-300"
             required
           />
         </label>
 
-        <label className="block mb-4">
-          <span className="text-gray-700">Password</span>
+        <label className="block">
+          <span className="text-gray-400">Password</span>
           <input
             type="password"
             name="password"
-            className="mt-1 block w-full border p-2 rounded"
+            className="mt-1 block w-full bg-gray-700 text-gray-100 border border-gray-600 p-2 rounded focus:outline-none focus:border-green-500 transition-colors duration-300"
             required
           />
         </label>
@@ -96,15 +96,15 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={state.loading}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded disabled:opacity-50"
+          className="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded transition-colors duration-300 disabled:opacity-50"
         >
           {state.loading ? "Signing up..." : "Sign Up"}
         </button>
-        <p className="mt-4 text-center text-gray-600">
+        <p className="text-center text-gray-400">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-blue-500 hover:text-blue-600 font-medium"
+            className="text-green-500 hover:text-green-600 font-medium transition-colors duration-300"
           >
             Login
           </Link>
