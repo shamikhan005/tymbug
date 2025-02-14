@@ -30,7 +30,7 @@ export default function ReplayButton({ webhookId }: { webhookId: string }) {
     <button
       onClick={handleReplay}
       disabled={loading}
-      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 font-semibold"
+      className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded-full transition-colors duration-300"
     >
       {loading ? "Replaying..." : "Replay Webhook"}
     </button>
