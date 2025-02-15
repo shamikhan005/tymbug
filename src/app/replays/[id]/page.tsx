@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 const prisma = new PrismaClient();
 
 interface ReplayDetailProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ReplayDetail({ params }: ReplayDetailProps) {
