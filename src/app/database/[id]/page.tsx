@@ -6,13 +6,15 @@ import ReplayHistory from "@/app/components/ReplayHistory";
 
 const prisma = new PrismaClient();
 
-export default async function WebhookDetail(context: {
-  params: { id: string };
-}) {
-  const params = await Promise.resolve(context.params);
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function WebhookDetail({ params }: PageProps) {
+  const { id } = await params;
 
   const webhook = await prisma.webhook.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       Replay: {
         orderBy: { replayedAt: "desc" },
