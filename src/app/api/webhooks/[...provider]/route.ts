@@ -12,10 +12,12 @@ const WebhookSchema = z.object({
   body: z.record(z.any())
 });
 
-export async function POST(request: Request, context: { params: { provider: string[] } }) {
-  const params = await Promise.resolve(context.params);
+export async function POST(request: Request, { params }: { params: Promise<{ provider: string[]}> }) {
 
   try {
+    const resolvedParams = await params;
+    const providerPath = resolvedParams.provider.join('/');
+
     await prisma.$connect();
 
     // extract authentication token from headers
@@ -33,15 +35,12 @@ export async function POST(request: Request, context: { params: { provider: stri
       return NextResponse.json({ error: 'Invalid or expired authentication token' }, { status: 401 });
     }
 
-    const provider = params.provider.join('/');
-
     const headers = Object.fromEntries(
       Array.from(request.headers.entries())
         .filter(([key]) => !['authorization', 'content-length'].includes(key.toLowerCase()))
     );
 
     const body = await request.json().catch(() => ({}));
-
 
     const validation = WebhookSchema.safeParse({
       headers,
@@ -57,8 +56,8 @@ export async function POST(request: Request, context: { params: { provider: stri
 
     const webhook = await prisma.webhook.create({
       data: {
-        provider,
-        path: `/api/webhooks/${provider}`,
+        provider: providerPath,
+        path: `/api/webhooks/${providerPath}`,
         method: 'POST',
         headers: validation.data.headers,
         body: validation.data.body,
@@ -84,6 +83,5 @@ export async function POST(request: Request, context: { params: { provider: stri
       },
       { status: 500 }
     );
-
   }
 }
