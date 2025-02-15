@@ -77,7 +77,7 @@ Content-Type: application/json
               step: "1",
               title: "Send a webhook to Tymbug's test endpoint",
               description:
-                "Use your favorite API client or curl to send a webhook to https://api.tymbug.com/webhook",
+                "Use your favorite API client or curl to send a webhook.",
             },
             {
               step: "2",
