@@ -6,8 +6,7 @@ import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
 
-export async function POST(request: NextRequest, context: { params: { id: string } }) {
-  const params = await Promise.resolve(context.params);
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
 
   try {
     // extract authentication token from headers
