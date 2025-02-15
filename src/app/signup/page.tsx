@@ -78,7 +78,7 @@ export default function SignupPage() {
           <input
             type="email"
             name="email"
-            className="mt-1 block w-full border bg-gray-700 border-gray-600 p-2 rounded focus:outline-none focus:border-green-500 transition-colors duration-300"
+            className="mt-1 block w-full border bg-gray-700 border-gray-600 text-gray-100 p-2 rounded focus:outline-none focus:border-green-500 transition-colors duration-300"
             required
           />
         </label>
