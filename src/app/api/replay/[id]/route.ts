@@ -6,9 +6,10 @@ import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }>}) {
 
   try {
+    const { id } =  await params;
     // extract authentication token from headers
     let token = request.headers.get('authorization')?.split('Bearer ')[1];
 
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }
 
     const original = await prisma.webhook.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!original) {
