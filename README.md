@@ -59,9 +59,6 @@ npm run build
 npm start
 ```
 
-## usage example (using tymbug with stripe)
+## documentation 
 
-#### Link: [tymbug usage example.pdf](https://github.com/user-attachments/files/18810858/tymbug.usage.example.pdf)
-
-#
-*Don't know if this platform has a use case, just wanted to practice async functions and build some stuff* 😄
+https://tymbug.vercel.app/docs
