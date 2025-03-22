@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -33,13 +34,24 @@ export default function SignupPage() {
       const data = await res.json();
 
       if (!res.ok) {
+        toast.error(data.error || "Signup failed");
         return {
           ...prevState,
           error: data.error || "Signup failed",
           loading: false,
         };
       } else {
-        router.push("/login");
+        // Show verification email toast
+        toast.success(
+          "Account created! Please check your email to verify your account before logging in.",
+          { duration: 8000 }
+        );
+        
+        // Redirect after a short delay to ensure the toast is visible
+        setTimeout(() => {
+          router.push("/login");
+        }, 1000);
+        
         return {
           ...prevState,
           message: data.message || "Signup successful!",
@@ -47,6 +59,7 @@ export default function SignupPage() {
         };
       }
     } catch (err) {
+      toast.error("An unexpected error occurred");
       return {
         ...prevState,
         error: "An unexpected error occurred",
@@ -108,6 +121,9 @@ export default function SignupPage() {
           >
             Login
           </Link>
+        </p>
+        <p className="text-xs text-center text-gray-500 mt-4">
+          By signing up, you'll receive a verification email. Please check your inbox and follow the instructions to verify your account.
         </p>
       </form>
     </div>
