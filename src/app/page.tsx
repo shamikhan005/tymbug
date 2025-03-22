@@ -11,12 +11,20 @@ export default function LandingPage() {
           A personal project for experimenting with webhook debugging,
           replaying, and analysis.
         </p>
-        <Link
-          href="/signup"
-          className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-6 rounded-full transition-colors duration-300 animate-pulse"
-        >
-          Get Started
-        </Link>
+        <div className="flex justify-center gap-4">
+          <Link
+            href="/signup"
+            className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-6 rounded-full transition-colors duration-300 animate-pulse"
+          >
+            Get Started
+          </Link>
+          <Link
+            href="/docs"
+            className="inline-block bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold py-2 px-6 rounded-full transition-colors duration-300"
+          >
+            Documentation
+          </Link>
+        </div>
         <div className="mt-12 p-4 bg-gray-800 rounded-lg overflow-hidden">
           <pre className="text-left text-sm md:text-base whitespace-pre-wrap break-all">
             <code className="block">
@@ -102,6 +110,21 @@ Content-Type: application/json
               </div>
             </div>
           ))}
+        </div>
+      </section>
+      
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="bg-gray-800 p-8 rounded-lg">
+          <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
+          <p className="text-xl text-gray-400 mb-6">
+            Check out our comprehensive documentation to learn more about TymBug's features.
+          </p>
+          <Link
+            href="/docs"
+            className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-6 rounded-full transition-colors duration-300"
+          >
+            Read the Docs
+          </Link>
         </div>
       </section>
     </div>
