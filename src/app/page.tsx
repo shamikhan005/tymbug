@@ -8,8 +8,7 @@ export default function LandingPage() {
           Tymbug: A Webhook Playground
         </h1>
         <p className="text-xl md:text-2xl text-gray-400 mb-8 animate-fade-in-up">
-          A personal project for experimenting with webhook debugging,
-          replaying, and analysis.
+          Capture, debug, and replay webhooks with ease
         </p>
         <div className="flex justify-center gap-4">
           <Link
@@ -28,16 +27,18 @@ export default function LandingPage() {
         <div className="mt-12 p-4 bg-gray-800 rounded-lg overflow-hidden">
           <pre className="text-left text-sm md:text-base whitespace-pre-wrap break-all">
             <code className="block">
-              {`POST /webhook HTTP/1.1
-Host: api.tymbug.com
+              {`POST /api/webhooks/stripe HTTP/1.1
+Host: tymbug.vercel.app
 Content-Type: application/json
+Authorization: Bearer your-token-here
 
 {
-  "event": "user.created",
+  "event": "payment.succeeded",
   "data": {
-    "id": "123",
-    "name": "Shami khan",
-    "email": "shamikhan005@proton.me"
+    "id": "ch_123456",
+    "amount": 2000,
+    "currency": "usd",
+    "status": "succeeded"
   }
 }`}
             </code>
@@ -51,18 +52,18 @@ Content-Type: application/json
           {[
             {
               title: "Real-time Webhook Logging",
-              description: "Stores incoming webhook events for later analysis.",
+              description: "Capture and store incoming webhook events for analysis and debugging.",
               icon: "📥",
             },
             {
-              title: "Replay Webhooks",
-              description: "Resend past requests to test API behavior.",
-              icon: "🔁",
+              title: "Production Debugging",
+              description: "Replay webhooks to any endpoint to test your implementation in different environments.",
+              icon: "🔧",
             },
             {
-              title: "Compare Responses",
-              description: "View differences between webhook attempts.",
-              icon: "🔍",
+              title: "Webhook History",
+              description: "View and filter your webhook history by provider for easier troubleshooting.",
+              icon: "📋",
             },
           ].map((feature, index) => (
             <div
@@ -78,26 +79,26 @@ Content-Type: application/json
       </section>
 
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">How to Use It</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center">How It Works</h2>
         <div className="space-y-8">
           {[
             {
               step: "1",
-              title: "Send a webhook to Tymbug's test endpoint",
+              title: "Configure your webhook provider",
               description:
-                "Use your favorite API client or curl to send a webhook.",
+                "Point your webhook provider to your TymBug endpoint with your authentication token.",
             },
             {
               step: "2",
-              title: "View and replay requests from the dashboard",
+              title: "View and analyze webhooks",
               description:
-                "Log in to the Tymbug dashboard to see your incoming webhooks and replay them with a single click.",
+                "Access your dashboard to see incoming webhooks, their payloads, and headers.",
             },
             {
               step: "3",
-              title: "Analyze headers, payload, and response history",
+              title: "Debug and replay",
               description:
-                "Dive deep into the details of each webhook, compare different attempts.",
+                "Use the production debugging feature to replay webhooks to any endpoint and fix issues faster.",
             },
           ].map((step, index) => (
             <div key={index} className="flex items-start">
@@ -115,16 +116,24 @@ Content-Type: application/json
       
       <section className="container mx-auto px-4 py-16 text-center">
         <div className="bg-gray-800 p-8 rounded-lg">
-          <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to simplify webhook development?</h2>
           <p className="text-xl text-gray-400 mb-6">
-            Check out our comprehensive documentation to learn more about TymBug's features.
+            TymBug makes webhook testing and debugging easier than ever.
           </p>
-          <Link
-            href="/docs"
-            className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-6 rounded-full transition-colors duration-300"
-          >
-            Read the Docs
-          </Link>
+          <div className="flex flex-col md:flex-row justify-center gap-4">
+            <Link
+              href="/signup"
+              className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-6 rounded-full transition-colors duration-300"
+            >
+              Sign Up Now
+            </Link>
+            <Link
+              href="/docs"
+              className="inline-block bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold py-2 px-6 rounded-full transition-colors duration-300"
+            >
+              Read the Docs
+            </Link>
+          </div>
         </div>
       </section>
     </div>
