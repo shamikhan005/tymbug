@@ -2,8 +2,11 @@ import { NextResponse, NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 export async function middleware(request: NextRequest) {
-
   const path = request.nextUrl.pathname;
+
+  if (path.startsWith('/api/github-webhook')) {
+    return NextResponse.next();
+  }
 
   if (path.startsWith('/dashboard')) {
     const accessToken = request.cookies.get('sb-access-token');
@@ -54,5 +57,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard', '/api/webhooks/:path*']
+  matcher: ['/dashboard', '/api/webhooks/:path*', '/api/github-webhook/:path*']
 }

@@ -17,7 +17,6 @@ export default function WebhookList() {
   if (error) return <div className="text-red-400">Error loading webhooks.</div>;
   if (!webhooks) return <div className="text-gray-400">...</div>;
 
-  // Filter webhooks by provider if selected
   const filteredWebhooks = selectedProvider 
     ? webhooks.filter((webhook: any) => webhook.provider === selectedProvider)
     : webhooks;

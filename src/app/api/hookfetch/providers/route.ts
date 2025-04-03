@@ -21,7 +21,6 @@ export async function GET() {
 
     const userId = user.id;
 
-    // Get distinct providers for this user
     const uniqueProviders = await prisma.webhook.findMany({
       where: {
         userId: userId

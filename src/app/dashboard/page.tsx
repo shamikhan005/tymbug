@@ -5,9 +5,10 @@ import LogoutButton from "../components/LogoutButton";
 import WebhookList from "../components/WebhookList";
 import TokenDisplay from "../components/TokenDisplay";
 import DebugDemo from "../components/DebugDemo";
+import WebhookSetup from "../components/WebhookSetup";
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState<'webhooks' | 'debug'>('webhooks');
+  const [activeTab, setActiveTab] = useState<'webhooks' | 'debug' | 'setup'>('webhooks');
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 font-mono">
@@ -21,7 +22,6 @@ export default function Dashboard() {
         <div className="space-y-8">
           <TokenDisplay />
           
-          {/* Tab Navigation */}
           <div className="border-b border-gray-700">
             <nav className="-mb-px flex space-x-8">
               <button
@@ -33,6 +33,16 @@ export default function Dashboard() {
                 }`}
               >
                 Webhook History
+              </button>
+              <button
+                onClick={() => setActiveTab('setup')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'setup'
+                    ? 'border-green-500 text-green-500'
+                    : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600'
+                }`}
+              >
+                GitHub Setup
               </button>
               <button
                 onClick={() => setActiveTab('debug')}
@@ -47,11 +57,17 @@ export default function Dashboard() {
             </nav>
           </div>
           
-          {/* Tab Content */}
           {activeTab === 'webhooks' && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Webhook History</h2>
               <WebhookList />
+            </div>
+          )}
+          
+          {activeTab === 'setup' && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">GitHub Webhook Setup</h2>
+              <WebhookSetup />
             </div>
           )}
           

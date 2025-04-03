@@ -32,7 +32,6 @@ export default function DocsPage() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Sidebar Navigation */}
           <div className="w-full md:w-64 flex-shrink-0">
             <div className="bg-gray-800 rounded-lg p-4 sticky top-4">
               <nav className="space-y-1">
@@ -53,7 +52,6 @@ export default function DocsPage() {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="flex-1">
             <div className="bg-gray-800 rounded-lg p-6">
               {activeSection === "getting-started" && (
