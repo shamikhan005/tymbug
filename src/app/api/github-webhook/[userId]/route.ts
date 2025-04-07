@@ -2,11 +2,11 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 
 export async function POST(
-  request: NextRequest,
-  context: { params: { userId: string } }
+  request: NextRequest, 
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = context.params;
+    const { userId } = await params;
     
     if (!userId) {
       return NextResponse.json({ error: "Missing user identifier" }, { status: 400 });
