@@ -1,13 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { createHmac, timingSafeEqual } from "crypto";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  context: { params: { userId: string } }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = context.params;
     
     if (!userId) {
       return NextResponse.json({ error: "Missing user identifier" }, { status: 400 });
