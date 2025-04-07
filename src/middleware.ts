@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  if (path.startsWith('/api/github-webhook')) {
+  if (path.startsWith('/api/github-webhook/')) {
     return NextResponse.next();
   }
 
