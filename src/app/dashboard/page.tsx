@@ -60,6 +60,9 @@ export default function Dashboard() {
           {activeTab === 'webhooks' && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Webhook History</h2>
+              <p className="text-gray-400 mb-6">
+                View all captured webhooks. Click on any webhook to view details, modify, and replay it to any endpoint.
+              </p>
               <WebhookList />
             </div>
           )}
@@ -77,29 +80,37 @@ export default function Dashboard() {
               <DebugDemo />
               
               <div className="bg-gray-800 p-6 rounded-lg shadow-lg mt-8">
-                <h3 className="text-lg font-medium text-gray-200 mb-4">How Production Debugging Works</h3>
+                <h3 className="text-lg font-medium text-gray-200 mb-4">Advanced Debugging Features</h3>
                 <div className="space-y-4 text-gray-300">
                   <p>
-                    This feature allows you to replay webhooks to any endpoint, making it perfect for debugging production issues:
+                    Our enhanced debugging tools give you more control over webhook testing:
                   </p>
                   <ol className="list-decimal pl-5 space-y-2">
                     <li>
-                      <strong>Select a webhook</strong> from your history that you want to replay
+                      <strong>View detailed webhook information</strong> including headers, body, and metadata
                     </li>
                     <li>
-                      <strong>Enter your target endpoint URL</strong> where you want to send the webhook
+                      <strong>Edit webhook payloads</strong> before replaying to test different scenarios
                     </li>
                     <li>
-                      <strong>Click "Replay Webhook"</strong> to send it to your specified endpoint
+                      <strong>Choose target environments</strong> - test locally or send to any custom endpoint
                     </li>
                     <li>
-                      <strong>View the response</strong> to see if your endpoint handled it correctly
+                      <strong>View detailed responses</strong> including status codes and response bodies
+                    </li>
+                    <li>
+                      <strong>Test with delays and errors</strong> using our test endpoint parameters:
+                      <ul className="list-disc pl-5 mt-2 space-y-1 text-sm">
+                        <li><code>?status=404</code> - Force a specific HTTP status code</li>
+                        <li><code>?delay=2000</code> - Add a delay in milliseconds</li>
+                        <li><code>?fail=true</code> - Simulate a random error response</li>
+                      </ul>
                     </li>
                   </ol>
                   
                   <div className="mt-4 p-3 bg-gray-700/50 rounded border border-gray-600">
                     <p className="text-sm">
-                      <strong>Tip:</strong> This is especially useful when you've fixed a bug in your webhook handler and want to verify the fix works without waiting for the service to send another webhook.
+                      <strong>TIP:</strong> Click on any webhook in the history to access the advanced debugger, which lets you modify headers and body content before replaying.
                     </p>
                   </div>
                 </div>

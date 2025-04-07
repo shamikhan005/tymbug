@@ -164,7 +164,7 @@ export default function WebhookSetup() {
         <div>
           <button
             onClick={testWebhook}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded"
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded"
           >
             Test Webhook
           </button>
