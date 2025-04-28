@@ -4,6 +4,7 @@ import Link from "next/link";
 import ReplayButton from "@/app/components/ReplayButton";
 import ReplayHistory from "@/app/components/ReplayHistory";
 import WebhookDebugger from "@/app/components/WebhookDebugger";
+import CollapsibleSection from "@/app/components/CollapsibleSection";
 
 const prisma = new PrismaClient();
 
@@ -70,19 +71,8 @@ export default async function WebhookDetail({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="mb-6">
-            <label className="text-sm font-medium text-gray-400">Headers</label>
-            <pre className="mt-1 bg-gray-700 p-4 rounded overflow-auto text-green-400">
-              {JSON.stringify(webhook.headers, null, 2)}
-            </pre>
-          </div>
-
-          <div className="mb-6">
-            <label className="text-sm font-medium text-gray-400">Body</label>
-            <pre className="mt-1 bg-gray-700 p-4 rounded overflow-auto text-green-400">
-              {JSON.stringify(webhook.body, null, 2)}
-            </pre>
-          </div>
+          <CollapsibleSection title="Headers" data={webhook.headers} />
+          <CollapsibleSection title="Body" data={webhook.body} />
 
           <div className="flex gap-3">
             <ReplayButton webhookId={webhook.id} />
