@@ -4,7 +4,7 @@ import Link from "next/link";
 import ReplayButton from "@/app/components/ReplayButton";
 import ReplayHistory from "@/app/components/ReplayHistory";
 import WebhookDebugger from "@/app/components/WebhookDebugger";
-import CollapsibleSection from "@/app/components/CollapsibleSection";
+import JsonVisualizer from "@/app/components/JsonTreeView";
 
 const prisma = new PrismaClient();
 
@@ -42,7 +42,7 @@ export default async function WebhookDetail({ params }: PageProps) {
         </div>
 
         <div className="bg-gray-800 shadow rounded-lg p-6 mb-6">
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label className="text-sm font-medium text-gray-400">
                 Provider
@@ -71,10 +71,12 @@ export default async function WebhookDetail({ params }: PageProps) {
             </div>
           </div>
 
-          <CollapsibleSection title="Headers" data={webhook.headers} />
-          <CollapsibleSection title="Body" data={webhook.body} />
+          <div className="space-y-6">
+            <JsonVisualizer data={webhook.headers} title="Headers" />
+            <JsonVisualizer data={webhook.body} title="Body" />
+          </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 mt-6">
             <ReplayButton webhookId={webhook.id} />
           </div>
         </div>

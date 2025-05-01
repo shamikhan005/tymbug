@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import JsonVisualizer from "./JsonTreeView";
 
 interface WebhookDebuggerProps {
   webhookId: string;
@@ -386,18 +387,21 @@ export default function WebhookDebugger({
               </ul>
             </div>
             
-            <div className={`relative border ${!validJson && editMode ? 'border-red-500' : 'border-gray-700'} rounded`}>
-              <textarea
-                value={editMode ? headers : JSON.stringify(originalHeaders, null, 2)}
-                onChange={(e) => {
-                  setHeaders(e.target.value);
-                  validateJson(e.target.value, 'headers');
-                }}
-                disabled={!editMode}
-                rows={12}
-                className="w-full bg-gray-900 p-4 rounded text-green-400 font-mono text-sm"
-              />
-            </div>
+            {editMode ? (
+              <div className={`relative border ${!validJson ? 'border-red-500' : 'border-gray-700'} rounded`}>
+                <textarea
+                  value={headers}
+                  onChange={(e) => {
+                    setHeaders(e.target.value);
+                    validateJson(e.target.value, 'headers');
+                  }}
+                  rows={12}
+                  className="w-full bg-gray-900 p-4 rounded text-green-400 font-mono text-sm"
+                />
+              </div>
+            ) : (
+              <JsonVisualizer data={JSON.parse(headers || '{}')} title="Headers Visualization" />
+            )}
             
             {!validJson && editMode && (
               <p className="mt-2 text-xs text-red-400">
@@ -421,18 +425,21 @@ export default function WebhookDebugger({
               <p className="mt-1">Try modifying specific values to test how your endpoint handles different scenarios.</p>
             </div>
             
-            <div className={`relative border ${!validJson && editMode ? 'border-red-500' : 'border-gray-700'} rounded`}>
-              <textarea
-                value={editMode ? body : JSON.stringify(originalBody, null, 2)}
-                onChange={(e) => {
-                  setBody(e.target.value);
-                  validateJson(e.target.value, 'body');
-                }}
-                disabled={!editMode}
-                rows={16}
-                className="w-full bg-gray-900 p-4 rounded text-green-400 font-mono text-sm"
-              />
-            </div>
+            {editMode ? (
+              <div className={`relative border ${!validJson ? 'border-red-500' : 'border-gray-700'} rounded`}>
+                <textarea
+                  value={body}
+                  onChange={(e) => {
+                    setBody(e.target.value);
+                    validateJson(e.target.value, 'body');
+                  }}
+                  rows={16}
+                  className="w-full bg-gray-900 p-4 rounded text-green-400 font-mono text-sm"
+                />
+              </div>
+            ) : (
+              <JsonVisualizer data={JSON.parse(body || '{}')} title="Body Visualization" />
+            )}
           </div>
         )}
         
@@ -457,9 +464,9 @@ export default function WebhookDebugger({
                 <p className="text-red-300">{error}</p>
               </div>
             ) : (
-              <div className="p-4 bg-gray-900 rounded border border-gray-700">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-gray-400">Status:</span>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 p-3 bg-gray-800 rounded-lg border border-gray-700">
+                  <span className="text-gray-400">Status Code:</span>
                   <span className={`font-medium ${
                     responseStatus !== null && (responseStatus >= 200 && responseStatus < 300)
                       ? 'text-green-500'
@@ -474,12 +481,11 @@ export default function WebhookDebugger({
                   </span>
                 </div>
                 
-                <div>
-                  <h4 className="text-gray-300 font-medium mb-2">Response Body:</h4>
-                  <pre className="p-3 bg-gray-800 rounded text-sm text-gray-300 overflow-x-auto max-h-96 overflow-y-auto">
-                    {JSON.stringify(responseBody, null, 2)}
-                  </pre>
-                </div>
+                <JsonVisualizer 
+                  data={responseBody || {}} 
+                  title="Response Body" 
+                  className="border border-gray-700"
+                />
                 
                 <div className="mt-4 p-3 bg-gray-800/50 rounded text-xs">
                   <p className="text-gray-400">
