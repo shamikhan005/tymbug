@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initializeWebhookSystem } from "@/app/lib/webhooks";
 import { findUserByIdentifier } from "@/app/lib/auth";
+import type { UserIdRouteHandler } from "@/app/types/route";
 
 const webhookRegistry = initializeWebhookSystem();
 
-export async function POST(
+export const POST: UserIdRouteHandler = async (
   request: NextRequest,
-  context: { params: { userId: string } }
-) {
+  context
+) => {
   try {
     const { userId } = context.params;
     

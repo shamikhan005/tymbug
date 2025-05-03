@@ -1,12 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import type { IdRouteHandler } from "@/app/types/route";
 
 const prisma = new PrismaClient();
 
-export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
+export const GET: IdRouteHandler = async (request, context) => {
   const { id } = context.params;
 
   try {
