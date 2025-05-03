@@ -13,10 +13,14 @@ interface ProviderFilterProps {
 export default function ProviderFilter({ selectedProvider, onSelectProvider }: ProviderFilterProps) {
   const { data, error } = useSWR("/api/hookfetch/providers", fetcher);
   const [providers, setProviders] = useState<string[]>([]);
+  const [supportedProviders, setSupportedProviders] = useState<string[]>([]);
 
   useEffect(() => {
     if (data?.providers) {
       setProviders(data.providers);
+    }
+    if (data?.supportedProviders) {
+      setSupportedProviders(data.supportedProviders);
     }
   }, [data]);
 
@@ -41,15 +45,22 @@ export default function ProviderFilter({ selectedProvider, onSelectProvider }: P
           <button
             key={provider}
             onClick={() => onSelectProvider(provider)}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
+            className={`px-3 py-1 text-xs rounded-full transition-colors flex items-center gap-1 ${
               selectedProvider === provider
                 ? 'bg-green-500 text-black font-bold'
                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             }`}
           >
             {provider}
+            {supportedProviders.includes(provider) && (
+              <span className="inline-block w-2 h-2 bg-blue-400 rounded-full ml-1" title="Officially supported provider"></span>
+            )}
           </button>
         ))}
+      </div>
+      <div className="mt-2 text-xs text-gray-500 flex items-center">
+        <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mr-1"></span>
+        <span>= Officially supported provider</span>
       </div>
     </div>
   );

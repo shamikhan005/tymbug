@@ -28,8 +28,8 @@ export default async function ReplayDetail({ params }: ReplayDetailProps) {
       <div className="p-8 max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-green-500">
-            Replay Details
-          </h1>
+          Replay Details
+        </h1>
           <Link 
             href={`/database/${replay.originalWebhook.id}`} 
             className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-100 rounded transition-colors"

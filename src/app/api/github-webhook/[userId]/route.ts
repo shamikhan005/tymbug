@@ -1,74 +1,41 @@
-import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import { initializeWebhookSystem } from "@/app/lib/webhooks";
+import { findUserByIdentifier } from "@/app/lib/auth";
 
-export async function POST(
-  request: NextRequest, 
-  { params }: { params: Promise<{ userId: string }> }
-) {
+const webhookRegistry = initializeWebhookSystem();
+
+export async function POST(request: NextRequest, { params }: { params: { userId: string } }) {
   try {
-    const { userId } = await params;
+    const { userId } = params;
     
-    if (!userId) {
-      return NextResponse.json({ error: "Missing user identifier" }, { status: 400 });
-    }
-
-    const githubEvent = request.headers.get('x-github-event');
-    const githubSignature = request.headers.get('x-hub-signature-256');
-    const githubDelivery = request.headers.get('x-github-delivery');
+    const actualUserId = await findUserByIdentifier(userId);
     
-    if (!githubEvent || !githubDelivery) {
-      return NextResponse.json({ 
-        error: "Invalid GitHub webhook request - missing headers" 
-      }, { status: 400 });
-    }
-
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { id: userId },
-          { email: `${userId}@tymbug.user` }
-        ]
-      }
-    });
-
-    if (!user) {
+    if (!actualUserId) {
       console.error(`User not found for identifier: ${userId}`);
       return NextResponse.json({ error: "Invalid webhook configuration" }, { status: 401 });
     }
-
-    const payload = await request.text();
     
-    let parsedBody;
-    try {
-      parsedBody = JSON.parse(payload);
-    } catch (error) {
+    const handler = webhookRegistry.getHandlerForProvider('github');
+    
+    if (!handler) {
+      return NextResponse.json({ error: "GitHub webhook handler not available" }, { status: 500 });
+    }
+    
+    const validationResult = await handler.validateWebhook(request, 'github');
+    
+    if (!validationResult.isValid) {
       return NextResponse.json({ 
-        error: "Invalid JSON payload" 
+        error: validationResult.error || "Invalid GitHub webhook" 
       }, { status: 400 });
     }
-
-    const headers: Record<string, string> = {};
-    request.headers.forEach((value, key) => {
-      headers[key] = value;
-    });
-
-    const webhook = await prisma.webhook.create({
-      data: {
-        provider: "github",
-        path: request.nextUrl.pathname,
-        method: "POST",
-        headers,
-        body: parsedBody,
-        responseStatus: 200,
-        userId: user.id
-      },
-    });
-
+    
+    const webhookId = await handler.processWebhook(validationResult, actualUserId);
+    
     return NextResponse.json({
       success: true,
-      id: webhook.id,
-      event: githubEvent,
-      message: "Webhook received successfully"
+      id: webhookId,
+      event: validationResult.metadata?.event,
+      message: "GitHub webhook received successfully"
     }, { status: 200 });
   } catch (error) {
     console.error("GitHub webhook error:", error);

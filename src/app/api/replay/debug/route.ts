@@ -70,8 +70,13 @@ export async function POST(request: NextRequest) {
     let fullUrl = targetUrl;
     
     if (targetUrl.startsWith('/') && !targetUrl.match(/^https?:\/\//)) {
-      const host = request.headers.get('host') || 'localhost:3000';
-      const protocol = request.headers.get('x-forwarded-proto') || 'http';
+      let host = request.headers.get('host') || 'tymbug.vercel.app';
+      
+      if (host.includes('localhost')) {
+        host = 'tymbug.vercel.app';
+      }
+      
+      const protocol = request.headers.get('x-forwarded-proto') || 'https';
       fullUrl = `${protocol}://${host}${targetUrl}`;
     }
     

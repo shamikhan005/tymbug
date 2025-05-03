@@ -63,7 +63,8 @@ export default function WebhookDebugger({
 
   useEffect(() => {
     if (environment === 'test') {
-      setTargetUrl(`/api/test-endpoint${selectedParams}`);
+      let baseUrl = '/api/test-endpoint';
+      setTargetUrl(`${baseUrl}${selectedParams}`);
     } else if (environment === 'custom' && customUrl) {
       const baseUrl = customUrl.includes('?') ? customUrl.split('?')[0] : customUrl;
       const existingParams = customUrl.includes('?') ? customUrl.split('?')[1] : '';

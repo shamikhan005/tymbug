@@ -1,64 +1,17 @@
-import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-  try {
-    const githubEvent = request.headers.get('x-github-event');
-    const delivery = request.headers.get('x-github-delivery');
+export async function POST(request: Request) {
+  return NextResponse.json({
+    error: "Invalid GitHub webhook URL format",
+    message: "Please use either /api/github-webhook/[userId] or /api/webhooks/github/[userId]",
+    documentation: "See documentation for setting up GitHub webhooks"
+  }, { status: 400 });
+}
 
-    const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
-    const userIdentifier = pathParts[pathParts.length - 1];
-
-    if (!userIdentifier) {
-      return NextResponse.json({ error: "Invalid webhook URL format" }, { status: 400 });
-    }
-
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { id: userIdentifier },
-          { email: `${userIdentifier}@tymbug.user` }
-        ]
-      }
-    });
-
-    if (!user) {
-      console.error(`User not found for identifier: ${userIdentifier}`);
-      return NextResponse.json({ error: "Invalid webhook configuration" }, { status: 401 });
-    }
-
-    const payload = await request.text();
-    const parsedBody = JSON.parse(payload);
-
-    const headers: Record<string, string> = {};
-    request.headers.forEach((value, key) => {
-      headers[key] = value;
-    });
-
-    const webhook = await prisma.webhook.create({
-      data: {
-        provider: "github",
-        path: url.pathname,
-        method: "POST",
-        headers,
-        body: parsedBody,
-        responseStatus: 200,
-        userId: user.id
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      id: webhook.id,
-      event: githubEvent,
-      message: "Webhook received successfully"
-    }, { status: 200 });
-  } catch (error) {
-    console.error("GitHub webhook error:", error);
-    return NextResponse.json(
-      { error: "Internal server error", details: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
-    );
-  }
+export async function GET(request: Request) {
+  return NextResponse.json({
+    message: "GitHub webhook endpoint",
+    usage: "Configure your GitHub repository to send webhooks to /api/github-webhook/[userId] or the new format /api/webhooks/github/[userId]",
+    documentation: "See documentation for setting up GitHub webhooks"
+  }, { status: 200 });
 }

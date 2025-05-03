@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { cookies } from 'next/headers';
 import { supabase } from "@/app/utils/supabase";
 
+const KNOWN_PROVIDERS = ['github', 'generic'];
+
 export async function GET() {
   try {
     const cookieStore = cookies();
@@ -31,9 +33,14 @@ export async function GET() {
       distinct: ['provider']
     });
 
-    const providers = uniqueProviders.map(item => item.provider);
+    const usedProviders = uniqueProviders.map(item => item.provider);
     
-    return NextResponse.json({ providers });
+    const allProviders = [...new Set([...KNOWN_PROVIDERS, ...usedProviders])];
+    
+    return NextResponse.json({ 
+      providers: allProviders,
+      supportedProviders: KNOWN_PROVIDERS
+    });
   } catch (error) {
     console.error('Error fetching providers:', error);
     return NextResponse.json(

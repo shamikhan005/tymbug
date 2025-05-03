@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Target URL is required' }, { status: 400 });
     }
 
-    // Get the original webhook
     const webhook = await prisma.webhook.findUnique({
       where: {
         id: webhookId,
@@ -42,7 +41,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Webhook not found' }, { status: 404 });
     }
 
-    // Replay the webhook to the target URL
     const response = await fetch(targetUrl, {
       method: webhook.method,
       headers: webhook.headers as any,
@@ -58,7 +56,6 @@ export async function POST(request: NextRequest) {
       responseBody = { text: await response.text() };
     }
 
-    // Record the replay
     const replay = await prisma.replay.create({
       data: {
         originalId: webhook.id,

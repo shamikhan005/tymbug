@@ -1,6 +1,5 @@
 "use client";
 
-import DebugDemo from "../components/DebugDemo";
 import TokenDisplay from "../components/TokenDisplay";
 import LogoutButton from "../components/LogoutButton";
 
@@ -9,7 +8,7 @@ export default function DemoPage() {
     <div className="min-h-screen bg-gray-900 text-gray-100 font-mono">
       <div className="max-w-5xl mx-auto p-6 sm:p-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-semibold">Production Debugging Demo</h1>
+          <h1 className="text-2xl font-semibold">TymBug Demo</h1>
           <div className="flex items-center gap-4">
             <LogoutButton />
           </div>
@@ -21,59 +20,49 @@ export default function DemoPage() {
             <TokenDisplay />
           </div>
           
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Debugging Scenario</h2>
-            <DebugDemo />
-          </div>
-          
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold text-gray-100 mb-4">How This Works</h2>
+            <h2 className="text-xl font-semibold text-gray-100 mb-4">How TymBug Works</h2>
             <div className="space-y-4 text-gray-300">
               <p>
-                This demo simulates a production debugging scenario where you:
+                TymBug helps you capture, inspect, and debug webhooks using this simple workflow:
               </p>
               <ol className="list-decimal pl-5 space-y-2">
                 <li>
-                  <strong>Capture a webhook</strong> from a third-party service using TymBug
+                  <strong>Capture webhooks</strong> from any third-party service using your authentication token
                 </li>
                 <li>
-                  <strong>Debug the issue</strong> by examining the webhook's contents
+                  <strong>Inspect the details</strong> with our JSON visualization and header analysis
                 </li>
                 <li>
-                  <strong>Fix your endpoint</strong> to handle the webhook correctly
+                  <strong>Debug and test</strong> by replaying webhooks to your endpoints
                 </li>
                 <li>
-                  <strong>Replay the webhook</strong> to your fixed endpoint to verify the solution
+                  <strong>Track history</strong> to compare responses over time
                 </li>
               </ol>
               
               <div className="mt-6">
-                <h3 className="text-lg font-medium text-gray-200 mb-2">Real-world Example</h3>
-                <p>
-                  Imagine you're receiving webhooks from Stripe, but some payments are failing to process. You would:
-                </p>
+                <h3 className="text-lg font-medium text-gray-200 mb-2">Getting Started</h3>
                 <ol className="list-decimal pl-5 space-y-2 mt-2">
-                  <li>Configure Stripe to temporarily send webhooks to TymBug</li>
-                  <li>Wait for the problematic webhook to arrive</li>
-                  <li>Examine the webhook payload to identify the issue</li>
-                  <li>Fix your payment processing code</li>
-                  <li>Use TymBug to replay the exact same webhook to test your fix</li>
-                  <li>Once confirmed working, switch Stripe back to your production endpoint</li>
+                  <li>Copy your authentication token shown above</li>
+                  <li>Configure your webhook provider to send webhooks to TymBug</li>
+                  <li>Add the Authorization header to your requests</li>
+                  <li>View captured webhooks in your dashboard</li>
+                  <li>Click on any webhook to inspect details and replay it</li>
                 </ol>
               </div>
               
-              <div className="mt-6">
-                <h3 className="text-lg font-medium text-gray-200 mb-2">Getting Started</h3>
-                <p>
-                  To try this demo:
+              <div className="mt-6 p-4 bg-gray-700/30 rounded-lg border border-gray-700">
+                <h3 className="text-md font-medium text-gray-300 mb-2">Test with cURL</h3>
+                <p className="text-sm mb-2">
+                  You can send a test webhook with this command:
                 </p>
-                <ol className="list-decimal pl-5 space-y-2 mt-2">
-                  <li>Send a test webhook to TymBug using your authentication token</li>
-                  <li>Select that webhook in the demo above</li>
-                  <li>Use the test endpoint URL (pre-filled) or your own endpoint</li>
-                  <li>Click "Replay Webhook" to send it to the target endpoint</li>
-                  <li>View the response to see if your endpoint handled it correctly</li>
-                </ol>
+                <pre className="bg-gray-900 p-3 rounded text-sm overflow-x-auto">
+                  curl -X POST https://tymbug.vercel.app/api/webhook \<br/>
+                  &nbsp;&nbsp;-H "Authorization: Bearer YOUR_TOKEN" \<br/>
+                  &nbsp;&nbsp;-H "Content-Type: application/json" \<br/>
+                  &nbsp;&nbsp;-d {"{'"}event": "test", "message": "Hello from TymBug!"{"}"}
+                </pre>
               </div>
             </div>
           </div>
