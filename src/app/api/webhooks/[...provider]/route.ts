@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { initializeWebhookSystem, WebhookHandlerRegistry } from "@/app/lib/webhooks";
 import { authenticateRequestWithToken } from "@/app/lib/auth";
-import type { ProviderRouteHandler } from "@/app/types/route";
 
 const webhookRegistry = initializeWebhookSystem();
 
-export const POST: ProviderRouteHandler = async (request, context) => {
+export async function POST(
+  request: Request,
+  context: { params: { provider: string[] } }
+) {
   try {
     const { provider } = context.params;
     const providerPath = provider.join('/');

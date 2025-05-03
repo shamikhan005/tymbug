@@ -3,11 +3,13 @@ import { PrismaClient } from "@prisma/client";
 import axios, { Method } from "axios";
 import { supabase } from "@/app/utils/supabase";
 import { cookies } from "next/headers";
-import type { IdRouteHandler } from "@/app/types/route";
 
 const prisma = new PrismaClient();
 
-export const POST: IdRouteHandler = async (request, context) => {
+export async function POST(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
 
   try {
     const { id } = context.params;

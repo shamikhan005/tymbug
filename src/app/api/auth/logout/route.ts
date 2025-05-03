@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-export const POST = async (request: Request) => {
+export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
     cookieStore.delete('sb-access-token');
