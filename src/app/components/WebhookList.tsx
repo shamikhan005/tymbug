@@ -6,14 +6,11 @@ import Link from "next/link";
 import ProviderFilter from "./ProviderFilter";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-// Provider badge styling
 const PROVIDER_COLORS: Record<string, string> = {
   github: "bg-blue-600/20 text-blue-400 border border-blue-700/30",
   generic: "bg-purple-600/20 text-purple-400 border border-purple-700/30",
   stripe: "bg-green-600/20 text-green-400 border border-green-700/30",
   test: "bg-yellow-600/20 text-yellow-400 border border-yellow-700/30",
-  // Default for unknown providers
   default: "bg-gray-600/20 text-gray-400 border border-gray-700/30"
 };
 
@@ -41,10 +38,10 @@ export default function WebhookList() {
   return (
     <div>
       <div className="mb-4">
-        <ProviderFilter 
-          selectedProvider={selectedProvider} 
-          onSelectProvider={setSelectedProvider} 
-        />
+      <ProviderFilter 
+        selectedProvider={selectedProvider} 
+        onSelectProvider={setSelectedProvider} 
+      />
       </div>
       
       <div className="space-y-3">
@@ -107,20 +104,20 @@ export default function WebhookList() {
                     {webhook.id}
                   </span>
                   <div className="bg-gray-700 rounded-full p-1">
-                    <svg
+                  <svg
                       className="w-4 h-4 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
                   </div>
                 </div>
               </div>
