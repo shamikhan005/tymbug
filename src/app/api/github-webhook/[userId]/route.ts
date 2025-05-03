@@ -4,9 +4,12 @@ import { findUserByIdentifier } from "@/app/lib/auth";
 
 const webhookRegistry = initializeWebhookSystem();
 
-export async function POST(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function POST(
+  request: NextRequest,
+  context: { params: { userId: string } }
+) {
   try {
-    const { userId } = params;
+    const { userId } = context.params;
     
     const actualUserId = await findUserByIdentifier(userId);
     

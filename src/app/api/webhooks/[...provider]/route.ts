@@ -4,18 +4,22 @@ import { authenticateRequestWithToken } from "@/app/lib/auth";
 
 const webhookRegistry = initializeWebhookSystem();
 
-export async function POST(request: Request, { params }: { params: { provider: string[] } }) {
+export async function POST(
+  request: Request,
+  context: { params: { provider: string[] } }
+) {
   try {
-    const providerPath = params.provider.join('/');
-    const [provider, ...rest] = params.provider;
+    const { provider } = context.params;
+    const providerPath = provider.join('/');
+    const providerName = provider[0]; // Get the first segment as the provider name
 
-    console.log(`Received webhook for provider: ${provider}, path: ${providerPath}`);
+    console.log(`Received webhook for provider: ${providerName}, path: ${providerPath}`);
 
-    const handler = webhookRegistry.getHandlerForProvider(provider);
+    const handler = webhookRegistry.getHandlerForProvider(providerName);
 
     if (!handler) {
       return NextResponse.json(
-        { error: `Unsupported webhook provider: ${provider}` },
+        { error: `Unsupported webhook provider: ${providerName}` },
         { status: 400 }
       );
     }
@@ -28,7 +32,7 @@ export async function POST(request: Request, { params }: { params: { provider: s
       );
     }
 
-    const validationResult = await handler.validateWebhook(request, provider);
+    const validationResult = await handler.validateWebhook(request, providerName);
 
     if (!validationResult.isValid) {
       return NextResponse.json(
@@ -42,7 +46,7 @@ export async function POST(request: Request, { params }: { params: { provider: s
     return NextResponse.json({
       success: true,
       id: webhookId,
-      provider,
+      provider: providerName,
       metadata: validationResult.metadata
     }, { status: 200 });
   } catch (error) {
