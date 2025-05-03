@@ -8,11 +8,11 @@ const prisma = new PrismaClient();
 
 export async function POST(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
 
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     // extract authentication token from headers
     let token = request.headers.get('authorization')?.split('Bearer ')[1];
 

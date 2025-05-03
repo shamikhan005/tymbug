@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Define correct types for route handlers in Next.js 15
 export type RouteHandlerContext<T = Record<string, string>> = {
-  params: T;
+  params: Promise<T>;
 };
 
 // Generic route handler types

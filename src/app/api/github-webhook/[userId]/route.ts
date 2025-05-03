@@ -6,10 +6,10 @@ const webhookRegistry = initializeWebhookSystem();
 
 export async function POST(
   request: NextRequest,
-  context: { params: { userId: string } }
+  context: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = context.params;
+    const { userId } = await context.params;
     
     const actualUserId = await findUserByIdentifier(userId);
     

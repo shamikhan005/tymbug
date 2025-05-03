@@ -6,10 +6,10 @@ const webhookRegistry = initializeWebhookSystem();
 
 export async function POST(
   request: Request,
-  context: { params: { provider: string[] } }
+  context: { params: Promise<{ provider: string[] }> }
 ) {
   try {
-    const { provider } = context.params;
+    const { provider } = await context.params;
     const providerPath = provider.join('/');
     const providerName = provider[0]; // Get the first segment as the provider name
 
