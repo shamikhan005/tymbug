@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { cookies } from 'next/headers';
 import { supabase } from "@/app/utils/supabase";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const cookieStore = cookies();
     const accessToken = (await cookieStore).get('sb-access-token')?.value;

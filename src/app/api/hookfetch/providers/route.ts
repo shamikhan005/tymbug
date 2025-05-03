@@ -5,7 +5,7 @@ import { supabase } from "@/app/utils/supabase";
 
 const KNOWN_PROVIDERS = ['github', 'generic'];
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const cookieStore = cookies();
     const accessToken = (await cookieStore).get('sb-access-token')?.value;
