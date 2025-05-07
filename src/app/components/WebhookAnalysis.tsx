@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AnalysisResult } from '../lib/analyzer/types';
 import { WebhookData } from '../lib/webhooks/types';
 
@@ -13,11 +13,7 @@ export default function WebhookAnalysis({ webhook }: WebhookAnalysisProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    analyzeWebhook();
-  }, [webhook]);
-
-  const analyzeWebhook = async () => {
+  const analyzeWebhook = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -44,7 +40,11 @@ export default function WebhookAnalysis({ webhook }: WebhookAnalysisProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [webhook]);
+
+  useEffect(() => {
+    analyzeWebhook();
+  }, [analyzeWebhook]);
 
   const renderSeverityBadge = (severity: 'low' | 'medium' | 'high') => (
     <span className={`text-xs px-2 py-1 rounded-full ${

@@ -269,7 +269,7 @@ export default function WebhookDebugger({
             <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700 mb-6">
               <h3 className="text-sm font-medium text-gray-300 mb-2">What is this?</h3>
               <p className="text-sm text-gray-400">
-                The webhook debugger allows you to test webhook delivery by sending this webhook's payload to any endpoint.
+                The webhook debugger allows you to test webhook delivery by sending this webhook&apos;s payload to any endpoint.
                 You can modify the headers and body before sending, and see the response from your endpoint.
               </p>
             </div>
@@ -341,7 +341,7 @@ export default function WebhookDebugger({
                 </div>
                 
                 <div className="mt-2 p-2 bg-gray-900/50 rounded text-xs text-gray-400">
-                  <span className="text-gray-300">Tip:</span> Test parameters let you control how the test endpoint responds. Try "Delayed Response" to test timeout handling.
+                  <span className="text-gray-300">Tip:</span> Test parameters let you control how the test endpoint responds. Try &quot;Delayed Response&quot; to test timeout handling.
                 </div>
               </div>
               
@@ -493,7 +493,7 @@ export default function WebhookDebugger({
                 <div className="mt-4 p-3 bg-gray-800/50 rounded text-xs">
                   <p className="text-gray-400">
                     <span className="text-gray-300 font-medium">Debugging Tip:</span> Check that the response contains the expected data and status code.
-                    If you're seeing errors, you might need to adjust your webhook handler or authentication.
+                    If you&apos;re seeing errors, you might need to adjust your webhook handler or authentication.
                   </p>
                 </div>
               </div>

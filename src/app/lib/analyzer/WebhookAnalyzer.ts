@@ -137,7 +137,7 @@ export class WebhookAnalyzer {
     return JSON.stringify(keyData);
   }
 
-  private hashObject(obj: any): string {
+  private hashObject(obj: Record<string, unknown>): string {
     return JSON.stringify(obj)
       .split('')
       .reduce((hash, char) => {
