@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import JsonVisualizer from "./JsonTreeView";
+import WebhookAnalysis from './WebhookAnalysis';
 
 interface WebhookDebuggerProps {
   webhookId: string;
@@ -28,7 +29,7 @@ export default function WebhookDebugger({
 }: WebhookDebuggerProps) {
   const router = useRouter();
   
-  const [activeTab, setActiveTab] = useState<'setup' | 'headers' | 'body' | 'response'>('setup');
+  const [activeTab, setActiveTab] = useState<'setup' | 'headers' | 'body' | 'response' | 'analysis'>('setup');
   
   const [environment, setEnvironment] = useState<'test' | 'custom'>('test');
   const [customUrl, setCustomUrl] = useState<string>('');
@@ -194,7 +195,8 @@ export default function WebhookDebugger({
           { id: 'setup', label: 'Setup' },
           { id: 'headers', label: 'Headers' },
           { id: 'body', label: 'Body' },
-          { id: 'response', label: 'Response' }
+          { id: 'response', label: 'Response' },
+          { id: 'analysis', label: 'AI Analysis' }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -496,6 +498,20 @@ export default function WebhookDebugger({
                 </div>
               </div>
             )}
+          </div>
+        )}
+        
+        {activeTab === 'analysis' && (
+          <div className="mt-4">
+            <WebhookAnalysis
+              webhook={{
+                provider: environment,
+                method: 'POST',
+                path: targetUrl,
+                headers: editMode && headers ? JSON.parse(headers) : originalHeaders || {},
+                body: editMode && body ? JSON.parse(body) : originalBody || {}
+              }}
+            />
           </div>
         )}
       </div>
