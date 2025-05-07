@@ -10,7 +10,6 @@ export async function POST(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-
   try {
     const { id } = await context.params;
     // extract authentication token from headers
@@ -52,15 +51,27 @@ export async function POST(
           updateHeaders = { Authorization: `Bearer ${token}` }
         }
 
-        return await axios({
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.headers.get('origin') || 'http://localhost:3000';
+        const targetUrl = new URL(original.path, baseUrl).toString();
+
+        console.log(`Attempting replay to: ${targetUrl} (attempt ${attempt + 1})`);
+
+        const response = await axios({
           method: original.method as Method,
-          url: `http://localhost:3000${original.path}`,
+          url: targetUrl,
           headers: updateHeaders,
           data: original.body,
+          validateStatus: (status) => true 
         });
+
+        console.log(`Replay response status: ${response.status}`);
+        return response;
       } catch (error) {
+        console.error(`Replay attempt ${attempt + 1} failed:`, error);
         if (attempt >= 2) throw error;
-        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+        const delay = 1000 * (attempt + 1);
+        console.log(`Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
         return retry(attempt + 1);
       }
     };
@@ -75,11 +86,18 @@ export async function POST(
       }
     });
 
-    return NextResponse.json(replay);
+    return NextResponse.json({
+      ...replay,
+      message: 'Webhook replayed successfully'
+    });
   } catch (error) {
-    console.log("replay error:", error);
+    console.error("Replay error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "replay failed after 3 attempts" },
+      { 
+        error: "replay failed after 3 attempts",
+        details: errorMessage
+      },
       { status: 500 }
     );
   }
