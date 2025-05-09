@@ -33,7 +33,7 @@ Authorization: Bearer {your-token}
               Sign Up
             </Link>
             <Link
-              href="/docs"
+              href="https://deepwiki.com/shamikhan005/tymbug"
               className="inline-block bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold py-2 px-8 rounded-full transition-colors duration-300"
             >
               Documentation
