@@ -61,4 +61,4 @@ npm start
 
 ## documentation 
 
-https://tymbug.vercel.app/docs
+https://deepwiki.com/shamikhan005/tymbug
