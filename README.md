@@ -59,6 +59,3 @@ npm run build
 npm start
 ```
 
-## documentation 
-
-https://deepwiki.com/shamikhan005/tymbug
